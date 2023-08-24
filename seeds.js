@@ -20,7 +20,7 @@ p.save().then(p => {
     console.log(p);
 }) */
 
-/* const seedProducts = [
+const seedProducts = [
     {
         name: 'Eggplant',
         price: 1.00,
@@ -49,4 +49,4 @@ Product.insertMany(seedProducts)
         console.log(res);
     }).catch(err => {
         console.log(err);
-    });  */
+    });  
