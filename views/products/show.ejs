@@ -4,8 +4,8 @@
     <h1><%= product.name %></h1>
     <ul>
         <li>Price: $<%=product.price %></li>
-        <li>Category: <a href="/products?category=<%=product.category %>"><%=product.category %></a>
-        </li>
+        <li>Category: <a href="/products?category=<%=product.category %>"><%=product.category %></a></li>
+        <li><%=product.farm.name %></li>
     </ul>
     <section>
         <!-- <a href="/products">Go Back</a> -->

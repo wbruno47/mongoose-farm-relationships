@@ -2,8 +2,9 @@
 <%- include('../partials/nav') %>
 
 <div class="container">
-    <h1>Add A Product</h1>
-    <form action="/products" method="post">
+    <h1><%= farm.name %></h1>
+    <h2>Add A Product</h2>
+    <form action="/farms/<%= farm._id %>/products" method="post">
         <div class="form-group row">
             <label for="name">Product Name</label>
             <input type="text" name="name" placeholder="Product Name">
@@ -26,8 +27,8 @@
     </form>
     <section>
         <!-- <a href="/products">Go Back</a> -->
-        <form action="/products">
-            <button>Go Back</button>
+        <form action="/farms/<%= farm._id %>">
+            <button>Go Back to Farm Page</button>
         </form>
     </section>
 </div>

@@ -7,6 +7,8 @@ const AppError = require('./AppError');
 
 
 const Product = require('./models/product')
+const Farm = require('./models/farm');
+const { runInNewContext } = require('vm');
 
 /* Connect to MongoDB */
 mongoose.connect('mongodb://127.0.0.1:27017/farmStand2',
@@ -26,6 +28,62 @@ app.set('view engine', 'ejs');
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'))
 
+
+//FARM ROUTES
+app.get('/farms', async (req, res) => {
+    const farms = await Farm.find({});
+    res.render('farms/index', { farms });
+})
+
+app.get('/farms/new', (req, res) => {
+    res.render('farms/new');
+})
+
+app.post('/farms/', async (req, res) => {
+    const farm = new Farm(req.body);
+    await farm.save();
+    res.redirect('/farms');
+})
+
+app.get('/farms/:id', async (req, res) => {
+
+    const { id } = req.params;
+    const farm = await Farm.findById(id).populate('products');
+    console.log(farm);
+    if (!farm) {
+        throw next(new AppError('Farm not Found', 404));
+    }
+    res.render('farms/show', { farm });
+})
+
+app.get('/farms/:id/products/new', async (req, res) => {
+    const { id } = req.params;
+    const farm = await Farm.findById(id);
+    console.log(farm);
+    res.render('products/new', { categories, farm });
+})
+
+app.post('/farms/:id/products', async (req, res) => {
+    const { id } = req.params;
+    const farm = await Farm.findById(id);
+    const { name, price, category } = req.body;
+    const product = new Product({ name, price, category });
+
+    farm.products.push(product);
+    product.farm = farm;
+
+    await farm.save();
+    await product.save();
+
+    // res.send(farm);
+    res.redirect(`/farms/${farm._id}`);
+})
+
+app.delete('/farms/:id', async (req, res) => {
+    await Farm.findByIdAndDelete(req.params.id);
+    res.redirect('/farms');
+})
+// PRODUCT ROUTES
 const categories = ['fruit', 'vegetable', 'dairy']
 
 app.get('/products', async (req, res, next) => {
@@ -64,7 +122,7 @@ function wrapAsync(fn) {
 
 app.get('/products/:id', wrapAsync(async (req, res, next) => {
     const { id } = req.params;
-    const product = await Product.findById(id);
+    const product = await Product.findById(id).populate('farm', 'name');;
     console.log(product);
     if (!product) {
         throw next(new AppError('Product not Found', 404));

@@ -1,0 +1,36 @@
+<%- include('../partials/head') %>
+<%- include('../partials/nav') %>
+<div class="container">
+    <h1><%= farm.name %></h1>
+    <ul>
+        <li>City: <%=farm.city%></li>
+        <li>Email: <%=farm.email%></li>
+        </li>
+    </ul>
+    <h2>Products</h2>
+    <ul>
+        <% for(let product of farm.products){ %>
+        <li><a href="../products/<%= product._id %>"><%= product.name %></a></li>
+        <% } %>
+    </ul>
+    <section>
+        <!-- <a href=" /products">Go Back</a> -->
+        <form action="/farms/<%= farm._id %>/products/new">
+            <button class="btn btn-outline-secondary">Add Product</button>
+        </form>
+    </section>
+    <section>
+        <!-- <a href="/products">Go Back</a> -->
+        <form action="/farms">
+            <button class="btn btn-outline-secondary">Go Back</button>
+        </form>
+    </section>
+    <section>
+        <!-- <a href="/products">Go Back</a> -->
+        <form action="/farms/<%=farm._id %>?_method=DELETE" method="post">
+            <button class="btn btn-outline-danger">Delete</button>
+        </form>
+    </section>
+
+</div>
+<%- include('../partials/footer') %>
